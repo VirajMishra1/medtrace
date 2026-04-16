@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..400&display=swap');
+
+:root {
+  --bg-page: #07070d;
+  --bg-nav: rgba(7,7,13,0.88);
+  --bg-card: #0c0c13;
+  --bg-elevated: #111119;
+  --bg-input: #07070d;
+  --border-subtle: rgba(255,255,255,0.045);
+  --border-default: rgba(255,255,255,0.09);
+  --border-focus: #0ea5e9;
+  --accent: #0ea5e9;
+  --accent-2: #06b6d4;
+  --accent-glow: rgba(14,165,233,0.18);
+  --text-primary: #e8eef7;
+  --text-secondary: #94a3b8;
+  --text-muted: #556070;
+  --text-dim: #2a3040;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --orange: #f97316;
+  --red: #ef4444;
+  --blue: #0ea5e9;
+  --teal: #06b6d4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-page);
+  background-image:
+    radial-gradient(ellipse 100% 40% at 50% -10%, rgba(14,165,233,0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 30% at 80% 80%, rgba(6,182,212,0.03) 0%, transparent 50%);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Fine grid texture */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(14,165,233,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14,165,233,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 30%, transparent 100%);
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(14,165,233,0.15); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(14,165,233,0.3); }
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.card:hover { border-color: rgba(14,165,233,0.12); }
+
+.card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+}
+
+/* ── Palantir phase label ── */
+.phase-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.phase-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(14,165,233,0.25), transparent);
+}
+
+/* ── Data annotation tag ── */
+.data-tag {
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.02);
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+.badge-critical { background: rgba(239,68,68,0.1);   color: #ef4444; border: 1px solid rgba(239,68,68,0.22); }
+.badge-warning  { background: rgba(245,158,11,0.1);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.22); }
+.badge-info     { background: rgba(14,165,233,0.1);  color: #38bdf8; border: 1px solid rgba(14,165,233,0.22); }
+.badge-safe     { background: rgba(16,185,129,0.1);  color: #10b981; border: 1px solid rgba(16,185,129,0.22); }
+.badge-high     { background: rgba(16,185,129,0.1);  color: #10b981; border: 1px solid rgba(16,185,129,0.22); }
+.badge-medium   { background: rgba(245,158,11,0.1);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.22); }
+.badge-low      { background: rgba(239,68,68,0.1);   color: #ef4444; border: 1px solid rgba(239,68,68,0.22); }
+
+/* ── Primary button ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #06b6d4 100%);
+  color: white; border: none; border-radius: 7px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 0 0 0 rgba(14,165,233,0);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px rgba(14,165,233,0.45), 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-primary:disabled {
+  opacity: 0.3; cursor: not-allowed;
+  transform: none; box-shadow: none;
+}
+
+/* ── Progress bars ── */
+.confidence-bar-track {
+  height: 3px; background: rgba(255,255,255,0.04); border-radius: 99px; overflow: hidden;
+}
+.confidence-bar-fill {
+  height: 100%; border-radius: 99px;
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Section label ── */
+.section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-muted);
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+/* ── Animations ── */
+.fade-in { animation: fadeIn 0.45s cubic-bezier(0.4,0,0.2,1); }
+.slide-in { animation: slideIn 0.3s cubic-bezier(0.4,0,0.2,1); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.pulse-dot { animation: pulseDot 2s ease infinite; }
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px currentColor; }
+  50%       { opacity: 0.35; box-shadow: none; }
+}
+
+/* ── Focus states ── */
+textarea:focus, input:focus, select:focus {
+  outline: none;
+  border-color: rgba(14,165,233,0.55) !important;
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.1) !important;
+}
+
+/* ── Mono chip ── */
+.mono-chip {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  font-size: 10px; font-weight: 500;
+}
+
+/* ── Gradient text ── */
+.text-gradient {
+  background: linear-gradient(135deg, #38bdf8, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Step states ── */
+.step-active { color: var(--accent); }
+.step-done   { color: var(--green); }
+
+/* ── Glow utilities ── */
+.glow-blue  { box-shadow: 0 0 24px rgba(14,165,233,0.25); }
+.glow-green { box-shadow: 0 0 20px rgba(16,185,129,0.25); }
+.glow-red   { box-shadow: 0 0 20px rgba(239,68,68,0.25);  }
+
+/* ── Intel separator ── */
+.intel-sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(14,165,233,0.2) 20%, rgba(14,165,233,0.2) 80%, transparent);
+  margin: 28px 0;
+}
