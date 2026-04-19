@@ -14,7 +14,7 @@ class AnalysisOptions(BaseModel):
 
 
 class AnalyzeRequest(BaseModel):
-    patient_note: str = Field(..., min_length=10)
+    patient_note: str = Field(..., min_length=10, max_length=50000)
     options: AnalysisOptions = Field(default_factory=AnalysisOptions)
 
 

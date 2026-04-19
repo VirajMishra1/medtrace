@@ -69,31 +69,27 @@ const PatientInput: React.FC<PatientInputProps> = ({ onAnalyze, isLoading, sampl
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       className="card"
-      style={{ padding: "24px", marginBottom: "20px" }}
+      style={{ padding: "26px", marginBottom: "24px" }}
     >
-      {/* Phase label */}
-      <div className="phase-label" style={{ marginBottom: "18px" }}>
-        INPUT — PATIENT DATA
-      </div>
-
       {/* Header row */}
       <div
         style={{
           display: "flex",
           alignItems: "flex-start",
           justifyContent: "space-between",
-          marginBottom: "16px",
+          marginBottom: "18px",
           gap: "16px",
         }}
       >
         <div>
           <div
             style={{
-              fontSize: "18px",
-              fontWeight: 700,
-              color: "#e8eef7",
+              fontFamily: "var(--font-serif)",
+              fontSize: "26px",
+              fontWeight: 400,
+              color: "var(--text-primary)",
               letterSpacing: "-0.02em",
-              lineHeight: 1.2,
+              lineHeight: 1.15,
               marginBottom: "6px",
             }}
           >
@@ -101,13 +97,14 @@ const PatientInput: React.FC<PatientInputProps> = ({ onAnalyze, isLoading, sampl
           </div>
           <div
             style={{
-              fontSize: "11px",
-              color: "#556070",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-              letterSpacing: "0.04em",
+              fontSize: "12px",
+              color: "var(--text-muted)",
+              letterSpacing: "0.005em",
+              lineHeight: 1.5,
+              maxWidth: "520px",
             }}
           >
-            Paste unstructured clinical text — AI pipeline extracts diagnoses, medications, risks &amp; cost profile
+            Paste unstructured clinical text. The pipeline extracts diagnoses, medications, interaction risks, and a cost profile.
           </div>
         </div>
 
@@ -128,7 +125,7 @@ const PatientInput: React.FC<PatientInputProps> = ({ onAnalyze, isLoading, sampl
               cursor: "pointer",
               minWidth: "200px",
               transition: "border-color 0.15s ease",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+              fontFamily: "var(--font-mono)",
               letterSpacing: "0.03em",
             }}
           >
@@ -169,18 +166,18 @@ const PatientInput: React.FC<PatientInputProps> = ({ onAnalyze, isLoading, sampl
         value={note}
         onChange={(e) => setNote(e.target.value)}
         placeholder={
-          "Paste a clinical note here...\n\nExample: 65-year-old male with hypertension and type 2 diabetes presenting with..."
+          "Paste a clinical note here…\n\nExample: 65-year-old male with hypertension and type 2 diabetes presenting with…"
         }
         style={{
           width: "100%",
-          minHeight: "160px",
-          background: "rgba(7,7,13,0.8)",
-          border: "1px solid rgba(14,165,233,0.08)",
-          borderRadius: "8px",
-          color: "#cbd5e1",
-          fontSize: "13px",
+          minHeight: "200px",
+          background: "var(--bg-sunken)",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: "10px",
+          color: "var(--text-primary)",
+          fontSize: "13.5px",
           lineHeight: "1.75",
-          padding: "16px",
+          padding: "18px",
           resize: "vertical",
           fontFamily: "inherit",
           transition: "border-color 0.2s ease, box-shadow 0.2s ease",
@@ -207,8 +204,8 @@ const PatientInput: React.FC<PatientInputProps> = ({ onAnalyze, isLoading, sampl
             <span
               style={{
                 fontSize: "10px",
-                color: "#2a3040",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                color: "var(--text-muted)",
+                fontFamily: "var(--font-mono)",
                 letterSpacing: "0.08em",
               }}
             >

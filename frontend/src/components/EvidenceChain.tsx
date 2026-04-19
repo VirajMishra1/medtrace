@@ -37,14 +37,14 @@ const Arrow: React.FC<{ vertical?: boolean }> = ({ vertical }) => (
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      color: "#2a2a3e",
+      color: "#3a4060",
     }}
   >
     {vertical ? (
       <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
         <path
           d="M8 2V18M4 14L8 18L12 14"
-          stroke="#2a2a3e"
+          stroke="#3a4060"
           strokeWidth="1.5"
           strokeLinecap="round"
         />
@@ -53,7 +53,7 @@ const Arrow: React.FC<{ vertical?: boolean }> = ({ vertical }) => (
       <svg width="24" height="16" viewBox="0 0 24 16" fill="none">
         <path
           d="M2 8H18M14 4L18 8L14 12"
-          stroke="#2a2a3e"
+          stroke="#3a4060"
           strokeWidth="1.5"
           strokeLinecap="round"
         />
@@ -72,8 +72,8 @@ const EvidenceChain: React.FC<EvidenceChainProps> = ({ result }) => {
     <div
       style={{
         padding: "16px",
-        background: "#0a0a0f",
-        border: "1px solid #1e1e2e",
+        background: "var(--bg-sunken)",
+        border: "1px solid var(--border-subtle)",
         borderRadius: "8px",
         overflowX: "auto",
       }}
@@ -91,8 +91,8 @@ const EvidenceChain: React.FC<EvidenceChainProps> = ({ result }) => {
           label="Patient Note"
           sublabel={`${result.query_snippet.split(" ").length} words`}
           color="#e2e8f0"
-          bg="#12121a"
-          border="#2a2a3e"
+          bg="var(--bg-elevated)"
+          border="#3a4060"
         />
 
         <Arrow />
@@ -142,8 +142,8 @@ const EvidenceChain: React.FC<EvidenceChainProps> = ({ result }) => {
               label="Medications"
               sublabel={`${result.medications.length} extracted`}
               color="#94a3b8"
-              bg="#12121a"
-              border="#2a2a3e"
+              bg="var(--bg-elevated)"
+              border="#3a4060"
             />
           </div>
         </div>
@@ -203,15 +203,15 @@ const EvidenceChain: React.FC<EvidenceChainProps> = ({ result }) => {
               label={`+${result.diagnoses.length - 1} more Dx`}
               sublabel="differential"
               color="#64748b"
-              bg="#0d0d15"
-              border="#1e1e2e"
+              bg="var(--bg-sunken)"
+              border="var(--border-subtle)"
             />
           )}
         </div>
       </div>
 
       {/* Processing steps audit trail */}
-      <div style={{ marginTop: "16px", borderTop: "1px solid #1e1e2e", paddingTop: "14px" }}>
+      <div style={{ marginTop: "16px", borderTop: "1px solid var(--border-subtle)", paddingTop: "14px" }}>
         <div className="section-label" style={{ marginBottom: "8px" }}>
           Audit Trail
         </div>
@@ -220,7 +220,7 @@ const EvidenceChain: React.FC<EvidenceChainProps> = ({ result }) => {
             display: "flex",
             flexDirection: "column",
             gap: "3px",
-            fontFamily: "monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "11px",
           }}
         >
@@ -231,7 +231,7 @@ const EvidenceChain: React.FC<EvidenceChainProps> = ({ result }) => {
                 color: i === result.processing_steps.length - 1 ? "#0ea5e9" : "#475569",
               }}
             >
-              <span style={{ color: "#2a2a3e", marginRight: "6px" }}>
+              <span style={{ color: "#3a4060", marginRight: "6px" }}>
                 [{String(i + 1).padStart(2, "0")}]
               </span>
               {step}

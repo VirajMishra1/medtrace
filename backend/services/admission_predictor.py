@@ -79,11 +79,11 @@ def _icd10_base_score(matches: list[ICD10Match]) -> tuple[float, list[RiskFactor
     weights: list[float] = []
     for m in matches[:10]:
         code = m.code.upper()
-        # Check high-risk prefix first
+        # Check high-risk prefix first — longest prefix wins (most specific)
         score = None
-        for prefix, w in _HIGH_RISK_PREFIXES.items():
+        for prefix in sorted(_HIGH_RISK_PREFIXES, key=len, reverse=True):
             if code.startswith(prefix):
-                score = w
+                score = _HIGH_RISK_PREFIXES[prefix]
                 break
         if score is None:
             chapter = code[0] if code else 'Z'

@@ -13,31 +13,33 @@ const SEV_CFG = {
     color: "#ef4444",
     bg: "rgba(239,68,68,0.06)",
     border: "rgba(239,68,68,0.2)",
-    accent: "rgba(239,68,68,0.4)",
     Icon: Zap,
     label: "CRITICAL",
+    shape: "◆",
   },
   warning: {
     color: "#f59e0b",
     bg: "rgba(245,158,11,0.06)",
     border: "rgba(245,158,11,0.2)",
-    accent: "rgba(245,158,11,0.4)",
     Icon: AlertTriangle,
     label: "WARNING",
+    shape: "▲",
   },
   info: {
     color: "#3b82f6",
     bg: "rgba(59,130,246,0.06)",
     border: "rgba(59,130,246,0.2)",
-    accent: "rgba(59,130,246,0.4)",
     Icon: Info,
     label: "INFO",
+    shape: "●",
   },
 };
 
 const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, demoExpandIdx }) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
-  React.useEffect(() => { if (demoExpandIdx !== undefined) setExpandedIdx(demoExpandIdx); }, [demoExpandIdx]);
+  React.useEffect(() => {
+    if (demoExpandIdx !== undefined) setExpandedIdx(demoExpandIdx);
+  }, [demoExpandIdx]);
 
   if (interactions.length === 0) {
     return (
@@ -68,14 +70,10 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
           <ShieldCheck size={16} color="#10b981" />
         </div>
         <div>
-          <div
-            style={{ fontSize: "13px", fontWeight: 600, color: "#10b981" }}
-          >
+          <div style={{ fontSize: "13px", fontWeight: 600, color: "#10b981" }}>
             No interactions detected
           </div>
-          <div
-            style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}
-          >
+          <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>
             No drug-drug interactions or contraindications identified
           </div>
         </div>
@@ -84,7 +82,7 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
   }
 
   const criticalCount = interactions.filter((i) => i.severity === "critical").length;
-  const warningCount  = interactions.filter((i) => i.severity === "warning").length;
+  const warningCount = interactions.filter((i) => i.severity === "warning").length;
 
   return (
     <div>
@@ -104,8 +102,9 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
               fontWeight: 600,
               color: "#ef4444",
             }}
+            aria-label={`${criticalCount} critical drug interactions`}
           >
-            <Zap size={10} />
+            <span aria-hidden="true">◆</span>
             {criticalCount} Critical
           </div>
         )}
@@ -123,8 +122,9 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
               fontWeight: 600,
               color: "#f59e0b",
             }}
+            aria-label={`${warningCount} warning drug interactions`}
           >
-            <AlertTriangle size={10} />
+            <span aria-hidden="true">▲</span>
             {warningCount} Warnings
           </div>
         )}
@@ -167,7 +167,11 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
 
               {/* Main row */}
               <div
+                role="button"
+                aria-expanded={isExpanded}
                 onClick={() => setExpandedIdx(isExpanded ? null : i)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setExpandedIdx(isExpanded ? null : i); }}
+                tabIndex={0}
                 style={{
                   padding: "12px 14px 12px 18px",
                   cursor: "pointer",
@@ -175,6 +179,7 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
                   alignItems: "flex-start",
                   gap: "10px",
                   userSelect: "none",
+                  outline: "none",
                 }}
               >
                 {/* Icon */}
@@ -191,7 +196,7 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
                     flexShrink: 0,
                   }}
                 >
-                  <Icon size={13} color={cfg.color} />
+                  <Icon size={13} color={cfg.color} aria-hidden="true" />
                 </div>
 
                 {/* Content */}
@@ -204,6 +209,7 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
                       marginBottom: "4px",
                     }}
                   >
+                    {/* Shape + label for colorblind accessibility */}
                     <span
                       style={{
                         fontSize: "9px",
@@ -215,8 +221,12 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
                         borderRadius: "4px",
                         border: `1px solid ${cfg.color}30`,
                         textTransform: "uppercase",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
                       }}
                     >
+                      <span aria-hidden="true">{cfg.shape}</span>
                       {cfg.label}
                     </span>
                     <span
@@ -248,13 +258,7 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
                     )}
                   </div>
 
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: "#64748b",
-                      lineHeight: "1.55",
-                    }}
-                  >
+                  <div style={{ fontSize: "11px", color: "#64748b", lineHeight: "1.55" }}>
                     {interaction.description}
                   </div>
                 </div>
@@ -289,13 +293,7 @@ const InteractionAlerts: React.FC<InteractionAlertsProps> = ({ interactions, dem
                       <div className="section-label" style={{ marginBottom: "6px" }}>
                         Clinical Recommendation
                       </div>
-                      <p
-                        style={{
-                          fontSize: "12px",
-                          color: "#94a3b8",
-                          lineHeight: "1.65",
-                        }}
-                      >
+                      <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: "1.65" }}>
                         {interaction.clinical_recommendation}
                       </p>
                     </div>

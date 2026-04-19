@@ -19,13 +19,14 @@ from backend.models.schemas import SimilarPatient
 # === Global state (loaded once at startup) ===
 _patient_index: faiss.Index | None = None
 _patient_metadata: list[dict] | None = None
+_uid_lookup: dict[str, dict] = {}
 _bm25 = None
 _bm25_corpus: list[list[str]] | None = None
 
 
 def load_indexes():
     """Load all patient indexes into memory. Called at app startup."""
-    global _patient_index, _patient_metadata, _bm25, _bm25_corpus
+    global _patient_index, _patient_metadata, _uid_lookup, _bm25, _bm25_corpus
 
     if PATIENT_FAISS_PATH.exists():
         _patient_index = faiss.read_index(str(PATIENT_FAISS_PATH))
@@ -36,9 +37,18 @@ def load_indexes():
     if PATIENT_METADATA_PATH.exists():
         with open(PATIENT_METADATA_PATH) as f:
             _patient_metadata = json.load(f)
+        _uid_lookup = {m["patient_uid"]: m for m in _patient_metadata}
         print(f"[retriever] Loaded patient metadata: {len(_patient_metadata)} entries")
     else:
         print(f"[retriever] WARNING: patient metadata not found at {PATIENT_METADATA_PATH}")
+
+    # Validate FAISS/metadata alignment at startup
+    if _patient_index is not None and _patient_metadata is not None:
+        if _patient_index.ntotal != len(_patient_metadata):
+            print(
+                f"[retriever] ALIGNMENT MISMATCH: FAISS {_patient_index.ntotal} vectors "
+                f"vs metadata {len(_patient_metadata)} entries — retrieval may be unreliable"
+            )
 
     if BM25_INDEX_PATH.exists():
         with open(BM25_INDEX_PATH, "rb") as f:
@@ -139,13 +149,8 @@ def retrieve_similar_patients(
 
 
 def get_patient_by_uid(uid: str) -> dict | None:
-    """Lookup a patient record by uid."""
-    if _patient_metadata is None:
-        return None
-    for meta in _patient_metadata:
-        if meta["patient_uid"] == uid:
-            return meta
-    return None
+    """O(1) lookup of a patient record by uid."""
+    return _uid_lookup.get(uid)
 
 
 def get_sample_patients(n: int = 10) -> list[dict]:

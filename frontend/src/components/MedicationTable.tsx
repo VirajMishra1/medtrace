@@ -8,7 +8,7 @@ interface MedicationTableProps {
 }
 
 const Dash = () => (
-  <span style={{ color: "#252540", fontSize: "12px" }}>—</span>
+  <span style={{ color: "#3a4060", fontSize: "12px" }}>—</span>
 );
 
 const MedicationTable: React.FC<MedicationTableProps> = ({ medications }) => {
@@ -18,7 +18,7 @@ const MedicationTable: React.FC<MedicationTableProps> = ({ medications }) => {
         style={{
           padding: "16px",
           textAlign: "center",
-          color: "#383858",
+          color: "#475569",
           fontSize: "12px",
           background: "rgba(5,5,12,0.5)",
           border: "1px solid rgba(255,255,255,0.05)",
@@ -29,7 +29,7 @@ const MedicationTable: React.FC<MedicationTableProps> = ({ medications }) => {
           gap: "8px",
         }}
       >
-        <Pill size={14} color="#383858" />
+        <Pill size={14} color="#475569" />
         No medications detected in this note
       </div>
     );
@@ -61,7 +61,7 @@ const MedicationTable: React.FC<MedicationTableProps> = ({ medications }) => {
               fontSize: "10px",
               fontWeight: 700,
               letterSpacing: "0.08em",
-              color: "#383858",
+              color: "#475569",
               textTransform: "uppercase",
             }}
           >
@@ -126,16 +126,16 @@ const MedicationTable: React.FC<MedicationTableProps> = ({ medications }) => {
 
           <div
             className="mono-chip"
-            style={{ color: m.dosage ? "#94a3b8" : "#252540" }}
+            style={{ color: m.dosage ? "#94a3b8" : "#3a4060" }}
           >
             {m.dosage || <Dash />}
           </div>
 
-          <div style={{ fontSize: "12px", color: m.frequency ? "#94a3b8" : "#252540" }}>
+          <div style={{ fontSize: "12px", color: m.frequency ? "#94a3b8" : "#3a4060" }}>
             {m.frequency || <Dash />}
           </div>
 
-          <div style={{ fontSize: "12px", color: m.route ? "#94a3b8" : "#252540" }}>
+          <div style={{ fontSize: "12px", color: m.route ? "#94a3b8" : "#3a4060" }}>
             {m.route || <Dash />}
           </div>
         </motion.div>

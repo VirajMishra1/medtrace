@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
         position: "sticky",
         top: 0,
         zIndex: 100,
-        background: "rgba(7,7,13,0.9)",
+        background: "var(--bg-nav)",
         backdropFilter: "blur(28px)",
         WebkitBackdropFilter: "blur(28px)",
         borderBottom: "1px solid rgba(14,165,233,0.08)",
@@ -60,27 +60,23 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
           <span
             style={{
               fontSize: "14px",
-              fontWeight: 700,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-              background: "linear-gradient(90deg, #e8eef7 0%, #94a3b8 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              fontFamily: "var(--font-sans)",
+              color: "var(--text-primary)",
             }}
           >
             MedTrace
           </span>
-          <span style={{ color: "rgba(14,165,233,0.35)", fontSize: "12px", fontWeight: 300 }}>/</span>
+          <span style={{ color: "var(--border-strong)", fontSize: "14px", fontWeight: 200 }}>/</span>
           <span
             style={{
               fontSize: "9px",
-              fontWeight: 600,
-              letterSpacing: "0.18em",
+              fontWeight: 500,
+              letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: "rgba(14,165,233,0.45)",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+              color: "var(--text-muted)",
+              fontFamily: "var(--font-mono)",
             }}
           >
             Clinical Intelligence
@@ -95,7 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <div
               style={{
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "9px",
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
@@ -113,7 +109,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
             </div>
             <div
               style={{
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "9px",
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
@@ -149,7 +145,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
               padding: "5px 12px",
               cursor: "pointer",
               color: demoRunning ? "#ef4444" : "#0ea5e9",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: "9px",
               fontWeight: 700,
               letterSpacing: "0.14em",
@@ -174,7 +170,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
               padding: "5px 12px",
               cursor: "pointer",
               color: "#38bdf8",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: "9px",
               fontWeight: 600,
               letterSpacing: "0.14em",
@@ -197,7 +193,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
         {health && (
           <div
             style={{
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: "9px",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -231,7 +227,7 @@ const Navbar: React.FC<NavbarProps> = ({ health, onHowItWorks, onStartDemo, demo
             background: `${statusColor}08`,
             border: `1px solid ${statusColor}20`,
             borderRadius: "4px",
-            fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "9px",
             fontWeight: 600,
             letterSpacing: "0.12em",

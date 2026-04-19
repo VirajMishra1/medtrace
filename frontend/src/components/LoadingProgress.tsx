@@ -58,7 +58,7 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
             style={{
               fontSize: "10px",
               color: "#556070",
-              fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+              fontFamily: "var(--font-mono)",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
             }}
@@ -70,7 +70,7 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
         {/* Progress % */}
         <div
           style={{
-            fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "22px",
             fontWeight: 700,
             color: isComplete ? "#10b981" : "#0ea5e9",
@@ -149,10 +149,14 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
                   marginBottom: "4px",
                 }}
               >
-                {done
-                  ? <CheckCircle2 size={14} color="#10b981" />
-                  : <Loader2 size={14} color="#0ea5e9" style={{ animation: "spin 1s linear infinite" }} />
-                }
+                {done ? (
+                  <CheckCircle2 size={14} color="#10b981" />
+                ) : active ? (
+                  <Loader2 size={14} color="#0ea5e9" style={{ animation: "spin 1s linear infinite" }} />
+                ) : (
+                  <div style={{ width: "14px", height: "14px", borderRadius: "50%",
+                    border: "1.5px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }} />
+                )}
               </div>
 
               {/* Step number badge */}
@@ -179,7 +183,7 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
                   }`,
                 }}
               >
-                <span style={{ fontSize: "8px", color: "#2a3040", fontWeight: 700 }}>{i + 1}</span>
+                <span style={{ fontSize: "8px", color: "var(--text-muted)", fontWeight: 700 }}>{i + 1}</span>
               </div>
 
               {/* Label */}
@@ -187,7 +191,7 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
                 style={{
                   fontSize: "9px",
                   fontWeight: 600,
-                  color: done ? "#34d399" : active ? "#38bdf8" : "#2a3040",
+                  color: done ? "#34d399" : active ? "#38bdf8" : "var(--text-muted)",
                   letterSpacing: "0.04em",
                   textTransform: "uppercase",
                   whiteSpace: "nowrap",
@@ -202,8 +206,8 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
               <div
                 style={{
                   fontSize: "9px",
-                  color: done ? "rgba(52,211,153,0.4)" : "#1a2030",
-                  fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                  color: done ? "rgba(52,211,153,0.4)" : "var(--text-ghost)",
+                  fontFamily: "var(--font-mono)",
                   letterSpacing: "0.04em",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -232,9 +236,9 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
                 background: "rgba(7,7,13,0.8)",
                 borderRadius: "6px",
                 border: "1px solid rgba(14,165,233,0.06)",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "10px",
-                color: "#2a3040",
+                color: "var(--text-muted)",
                 maxHeight: "60px",
                 overflowY: "auto",
                 lineHeight: "1.8",
@@ -243,9 +247,9 @@ const LoadingProgress: React.FC<LoadingProgressProps> = ({ steps, currentStep })
               {steps.slice(-4).map((s, i) => (
                 <div
                   key={i}
-                  style={{ color: i === Math.min(steps.length, 4) - 1 ? "#38bdf8" : "#2a3040" }}
+                  style={{ color: i === Math.min(steps.length, 4) - 1 ? "#38bdf8" : "var(--text-muted)" }}
                 >
-                  <span style={{ color: "#1a2030", marginRight: "10px" }}>
+                  <span style={{ color: "var(--text-ghost)", marginRight: "10px" }}>
                     {String(steps.length - Math.min(steps.length, 4) + i + 1).padStart(2, "0")} ›
                   </span>
                   {s}

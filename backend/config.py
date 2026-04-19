@@ -3,12 +3,13 @@ from __future__ import annotations
 MedTrace Configuration
 All hyperparameters and service URLs in one place.
 """
+import os
 from pathlib import Path
 
 # === LM Studio ===
-LMSTUDIO_BASE_URL = "http://localhost:1234/v1"
-LMSTUDIO_API_KEY = "lm-studio"
-LLM_MODEL = "qwen2.5-3b-instruct"
+LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234/v1")
+LMSTUDIO_API_KEY = os.getenv("LMSTUDIO_API_KEY", "lm-studio")
+LLM_MODEL = os.getenv("LLM_MODEL", "qwen2.5-3b-instruct")
 EMBED_MODEL = "text-embedding-nomic-embed-text-v1.5"
 EMBED_DIM = 768
 

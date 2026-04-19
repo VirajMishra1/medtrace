@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface MethodologyModalProps {
   isOpen: boolean;
@@ -6,6 +6,13 @@ interface MethodologyModalProps {
 }
 
 const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onClose }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -26,8 +33,8 @@ const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onClose }) 
         onClick={(e) => e.stopPropagation()}
         className="fade-in"
         style={{
-          background: "#12121a",
-          border: "1px solid #2a2a3e",
+          background: "var(--bg-elevated)",
+          border: "1px solid var(--border-subtle)",
           borderRadius: "10px",
           padding: "28px",
           maxWidth: "680px",
@@ -63,7 +70,7 @@ const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onClose }) 
             onClick={onClose}
             style={{
               background: "none",
-              border: "1px solid #2a2a3e",
+              border: "1px solid var(--border-subtle)",
               color: "#64748b",
               cursor: "pointer",
               borderRadius: "6px",
@@ -102,9 +109,9 @@ const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onClose }) 
               style={{
                 margin: "10px 0",
                 padding: "10px 14px",
-                background: "#0a0a0f",
+                background: "var(--bg-sunken)",
                 borderRadius: "6px",
-                fontFamily: "monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "12px",
                 color: "#a78bfa",
                 border: "1px solid #1e1e2e",

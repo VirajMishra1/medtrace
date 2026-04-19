@@ -10,11 +10,11 @@ const TIER_CFG = {
   critical: { color: "#ef4444", bg: "rgba(239,68,68,0.08)",   border: "rgba(239,68,68,0.2)",   label: "CRITICAL COST", badge: "badge-critical" },
 } as const;
 
-const CAT_CFG: Record<string, { color: string; icon: string }> = {
-  medication:   { color: "#10b981", icon: "💊" },
-  procedure:    { color: "#0ea5e9", icon: "🔬" },
-  comorbidity:  { color: "#f59e0b", icon: "🫀" },
-  demographic:  { color: "#64748b", icon: "👤" },
+const CAT_CFG: Record<string, { color: string; abbr: string }> = {
+  medication:   { color: "#10b981", abbr: "RX" },
+  procedure:    { color: "#0ea5e9", abbr: "PR" },
+  comorbidity:  { color: "#f59e0b", abbr: "CM" },
+  demographic:  { color: "#64748b", abbr: "DM" },
 };
 
 const UtilBar: React.FC<{ label: string; value: number; color: string; isPrimary: boolean }> = (
@@ -67,7 +67,7 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px", flexShrink: 0 }}>
           <div style={{ position: "relative", width: "100px", height: "100px" }}>
             <svg width="100" height="100" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" stroke="#1e1e2e" strokeWidth="8" fill="none" />
+              <circle cx="50" cy="50" r="40" stroke="var(--border-subtle)" strokeWidth="8" fill="none" />
               <circle cx="50" cy="50" r="40" stroke={cfg.color}
                 strokeWidth="8" fill="none"
                 strokeDasharray={`${2 * Math.PI * 40 * data.cost_index / 100} ${2 * Math.PI * 40}`}
@@ -91,17 +91,17 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
           </p>
           {/* LOS + setting pills */}
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            <div style={{ padding: "6px 12px", background: "#0d0d15", border: "1px solid #1e1e2e", borderRadius: "6px" }}>
+            <div style={{ padding: "6px 12px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", borderRadius: "6px" }}>
               <div style={{ fontSize: "10px", color: "#475569", marginBottom: "2px" }}>Est. Setting</div>
               <div style={{ fontSize: "13px", fontWeight: 700, color: cfg.color }}>{util.primary_setting}</div>
             </div>
-            <div style={{ padding: "6px 12px", background: "#0d0d15", border: "1px solid #1e1e2e", borderRadius: "6px" }}>
+            <div style={{ padding: "6px 12px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", borderRadius: "6px" }}>
               <div style={{ fontSize: "10px", color: "#475569", marginBottom: "2px" }}>Est. LOS</div>
               <div style={{ fontSize: "13px", fontWeight: 700, color: "#e2e8f0" }}>
                 {util.estimated_los_days_min}–{util.estimated_los_days_max} days
               </div>
             </div>
-            <div style={{ padding: "6px 12px", background: "#0d0d15", border: "1px solid #1e1e2e", borderRadius: "6px" }}>
+            <div style={{ padding: "6px 12px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", borderRadius: "6px" }}>
               <div style={{ fontSize: "10px", color: "#475569", marginBottom: "2px" }}>Cost Drivers</div>
               <div style={{ fontSize: "13px", fontWeight: 700, color: "#e2e8f0" }}>{data.cost_drivers.length}</div>
             </div>
@@ -110,7 +110,7 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid #1e1e2e" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border-subtle)" }}>
         {(["drivers", "utilization", "opportunities"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
             background: "none", border: "none", cursor: "pointer",
@@ -132,11 +132,17 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
             const catCfg = CAT_CFG[d.category] ?? { color: "#64748b", icon: "•" };
             return (
               <div key={i} className="fade-in" style={{
-                padding: "10px 12px", background: "#0d0d15",
-                border: "1px solid #1e1e2e", borderRadius: "6px",
+                padding: "10px 12px", background: "var(--bg-sunken)",
+                border: "1px solid var(--border-subtle)", borderRadius: "6px",
               }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "14px", flexShrink: 0 }}>{catCfg.icon}</span>
+                  <div style={{
+                    flexShrink: 0, width: "24px", height: "24px", borderRadius: "4px",
+                    background: `${catCfg.color}14`, border: `1px solid ${catCfg.color}28`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: "var(--font-mono)", fontSize: "8px", fontWeight: 700,
+                    color: catCfg.color, letterSpacing: "0.04em",
+                  }}>{catCfg.abbr}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "3px" }}>
                       <span style={{ fontSize: "12px", fontWeight: 600, color: "#e2e8f0" }}>{d.driver}</span>
@@ -154,7 +160,7 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
                       <div style={{ display: "flex", gap: "4px", marginTop: "4px", flexWrap: "wrap" }}>
                         {d.icd10_codes.map(c => (
                           <span key={c} style={{
-                            fontSize: "10px", fontFamily: "monospace", padding: "1px 5px",
+                            fontSize: "10px", fontFamily: "var(--font-mono)", padding: "1px 5px",
                             background: "rgba(14,165,233,0.08)", color: "#22d3ee",
                             border: "1px solid rgba(139,92,246,0.2)", borderRadius: "3px",
                           }}>{c}</span>
@@ -185,8 +191,8 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {/* Utilization bars */}
           <div style={{
-            padding: "16px", background: "#0d0d15",
-            border: "1px solid #1e1e2e", borderRadius: "6px",
+            padding: "16px", background: "var(--bg-sunken)",
+            border: "1px solid var(--border-subtle)", borderRadius: "6px",
             display: "flex", flexDirection: "column", gap: "14px",
           }}>
             {utilItems.map(item => (
@@ -199,8 +205,8 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
 
           {/* LOS detail */}
           <div style={{
-            padding: "14px 16px", background: "#0d0d15",
-            border: "1px solid #1e1e2e", borderRadius: "6px",
+            padding: "14px 16px", background: "var(--bg-sunken)",
+            border: "1px solid var(--border-subtle)", borderRadius: "6px",
           }}>
             <div className="section-label" style={{ marginBottom: "12px" }}>
               Length of Stay Estimate
@@ -210,17 +216,17 @@ const CostAnalysis: React.FC<Props> = ({ data }) => {
               <div style={{ flex: 1, position: "relative", height: "24px" }}>
                 <div style={{
                   position: "absolute", left: 0, right: 0, top: "50%",
-                  height: "2px", background: "#1e1e2e", transform: "translateY(-50%)",
+                  height: "2px", background: "var(--border-subtle)", transform: "translateY(-50%)",
                 }} />
                 {[0, 7, 14, 21, 30].map(day => (
                   <div key={day} style={{
                     position: "absolute", left: `${(day / 30) * 100}%`,
                     top: "50%", transform: "translate(-50%, -50%)",
                   }}>
-                    <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#2a2a3e" }} />
+                    <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
                     <div style={{
                       position: "absolute", top: "10px", left: "50%",
-                      transform: "translateX(-50%)", fontSize: "9px", color: "#2a2a3e", whiteSpace: "nowrap",
+                      transform: "translateX(-50%)", fontSize: "9px", color: "#475569", whiteSpace: "nowrap",
                     }}>{day}d</div>
                   </div>
                 ))}

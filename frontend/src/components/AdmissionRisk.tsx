@@ -42,22 +42,22 @@ const Gauge: React.FC<{ probability: number; riskLevel: string }> = ({ probabili
       <svg width="128" height="128" viewBox="0 0 128 128">
         {/* Track */}
         <path d={describeArc(startAngle, startAngle + 270, R)}
-          stroke="#1e1e2e" strokeWidth="10" fill="none" strokeLinecap="round" />
+          stroke="var(--border-subtle)" strokeWidth="10" fill="none" strokeLinecap="round" />
         {/* Fill */}
         <path d={describeArc(startAngle, startAngle + 270 * probability, R)}
           stroke={cfg.color} strokeWidth="10" fill="none" strokeLinecap="round"
           style={{ filter: `drop-shadow(0 0 6px ${cfg.color}66)` }} />
         {/* Centre text */}
         <text x={cx} y={cy - 4} textAnchor="middle" fill={cfg.color}
-          fontSize="22" fontWeight="700" fontFamily="Inter,sans-serif">
+          fontSize="22" fontWeight="700" fontFamily="var(--font-sans)">
           {pct}%
         </text>
         <text x={cx} y={cy + 14} textAnchor="middle" fill="#64748b"
-          fontSize="10" fontFamily="Inter,sans-serif">
+          fontSize="10" fontFamily="var(--font-sans)">
           ADMISSION
         </text>
         <text x={cx} y={cy + 25} textAnchor="middle" fill="#64748b"
-          fontSize="10" fontFamily="Inter,sans-serif">
+          fontSize="10" fontFamily="var(--font-sans)">
           RISK
         </text>
       </svg>
@@ -94,8 +94,8 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
               { label: "Scenarios", value: String(data.simulation_scenarios.length) },
             ].map(s => (
               <div key={s.label} style={{
-                padding: "6px 12px", background: "#0d0d15",
-                border: "1px solid #1e1e2e", borderRadius: "6px",
+                padding: "6px 12px", background: "var(--bg-sunken)",
+                border: "1px solid var(--border-subtle)", borderRadius: "6px",
               }}>
                 <div style={{ fontSize: "10px", color: "#475569", marginBottom: "2px" }}>{s.label}</div>
                 <div style={{ fontSize: "13px", fontWeight: 700, color: cfg.color }}>{s.value}</div>
@@ -106,7 +106,7 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid #1e1e2e" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border-subtle)" }}>
         {(["scenarios", "factors"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
             background: "none", border: "none", cursor: "pointer",
@@ -129,7 +129,7 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
             const isWorse = sc.delta > 0;
             return (
               <div key={i} className="fade-in" style={{
-                padding: "12px 14px", background: "#0d0d15",
+                padding: "12px 14px", background: "var(--bg-sunken)",
                 border: `1px solid ${scCfg.border}`, borderRadius: "6px",
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
@@ -159,8 +159,8 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
                 {/* Probability bar */}
                 <div style={{ marginTop: "10px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
-                    <span style={{ fontSize: "9px", color: "#2a2a3e" }}>0%</span>
-                    <span style={{ fontSize: "9px", color: "#2a2a3e" }}>100%</span>
+                    <span style={{ fontSize: "9px", color: "#475569" }}>0%</span>
+                    <span style={{ fontSize: "9px", color: "#475569" }}>100%</span>
                   </div>
                   <div className="confidence-bar-track">
                     {/* Baseline marker */}
@@ -170,7 +170,7 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
                       <div style={{
                         position: "absolute", left: 0, top: 0, height: "100%",
                         width: `${data.admission_probability * 100}%`,
-                        background: "#2a2a3e", borderRadius: "2px",
+                        background: "rgba(255,255,255,0.08)", borderRadius: "2px",
                       }} />
                       <div style={{
                         position: "absolute", left: 0, top: 0, height: "100%",
@@ -192,8 +192,8 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           {data.risk_factors.slice(0, 8).map((f, i) => (
             <div key={i} className="fade-in" style={{
-              padding: "9px 12px", background: "#0d0d15",
-              border: "1px solid #1e1e2e", borderRadius: "5px",
+              padding: "9px 12px", background: "var(--bg-sunken)",
+              border: "1px solid var(--border-subtle)", borderRadius: "5px",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "5px" }}>
                 <span style={{
@@ -223,8 +223,8 @@ const AdmissionRisk: React.FC<Props> = ({ data }) => {
 
       {/* Methodology note */}
       <div style={{
-        padding: "10px 12px", background: "#0a0a0f",
-        border: "1px solid #1e1e2e", borderRadius: "6px",
+        padding: "10px 12px", background: "var(--bg-sunken)",
+        border: "1px solid var(--border-subtle)", borderRadius: "6px",
         fontSize: "10px", color: "#475569", lineHeight: "1.5",
       }}>
         <span style={{ color: "#0ea5e9", fontWeight: 600 }}>Methodology: </span>

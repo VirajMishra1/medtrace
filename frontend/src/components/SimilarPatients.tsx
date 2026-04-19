@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SimilarPatient, PatientRecord } from "../types";
 import { getPatient } from "../api";
-import { User, Loader2, ChevronDown } from "lucide-react";
+import { User, Loader2, ChevronDown, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SimilarPatientsProps {
@@ -10,34 +10,35 @@ interface SimilarPatientsProps {
 }
 
 const AVATAR_COLORS = [
-  { bg: "rgba(14,165,233,0.12)",  border: "rgba(14,165,233,0.25)",  color: "#38bdf8" },
-  { bg: "rgba(6,182,212,0.12)",   border: "rgba(6,182,212,0.25)",   color: "#22d3ee" },
-  { bg: "rgba(16,185,129,0.12)",  border: "rgba(16,185,129,0.25)",  color: "#34d399" },
-  { bg: "rgba(245,158,11,0.12)",  border: "rgba(245,158,11,0.25)",  color: "#fbbf24" },
-  { bg: "rgba(56,189,248,0.12)",  border: "rgba(56,189,248,0.25)",  color: "#7dd3fc" },
+  { bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.07)", color: "#4e5d6f" },
 ];
 
 const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandFirst }) => {
   const [selectedUid, setSelectedUid] = useState<string | null>(null);
+  const [fullRecord, setFullRecord] = useState<PatientRecord | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
+
   React.useEffect(() => {
     if (demoExpandFirst && patients.length > 0) handleSelect(patients[0].patient_uid);
   }, [demoExpandFirst]); // eslint-disable-line
-  const [fullRecord, setFullRecord] = useState<PatientRecord | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const handleSelect = async (uid: string) => {
     if (selectedUid === uid) {
       setSelectedUid(null);
       setFullRecord(null);
+      setFetchError(false);
       return;
     }
     setSelectedUid(uid);
+    setFetchError(false);
     setLoading(true);
     try {
       const record = await getPatient(uid);
       setFullRecord(record);
     } catch {
       setFullRecord(null);
+      setFetchError(true);
     } finally {
       setLoading(false);
     }
@@ -76,13 +77,7 @@ const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandF
                 background: "rgba(14,165,233,0.04)",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 {/* Avatar */}
                 <div
                   style={{
@@ -102,28 +97,14 @@ const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandF
 
                 {/* Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      marginBottom: "2px",
-                    }}
-                  >
-                    <span
-                      className="mono-chip"
-                      style={{
-                        color: "#38bdf8",
-                        fontWeight: 600,
-                        fontSize: "11px",
-                      }}
-                    >
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
+                    <span className="mono-chip" style={{ color: "#38bdf8", fontWeight: 600, fontSize: "11px" }}>
                       {p.patient_uid}
                     </span>
                     <span
                       style={{
                         fontSize: "10px",
-                        color: "#383858",
+                        color: "#475569",
                         background: "rgba(255,255,255,0.04)",
                         border: "1px solid rgba(255,255,255,0.07)",
                         padding: "1px 6px",
@@ -142,7 +123,7 @@ const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandF
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
-                    } as any}
+                    } as React.CSSProperties}
                   >
                     {p.snippet}
                   </p>
@@ -150,43 +131,26 @@ const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandF
 
                 {/* Score */}
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: 700,
-                      color: "#0ea5e9",
-                      lineHeight: 1,
-                    }}
-                  >
+                  <div style={{ fontSize: "14px", fontWeight: 700, color: "#0ea5e9", lineHeight: 1 }}>
                     {matchPct.toFixed(0)}%
                   </div>
-                  <div style={{ fontSize: "9px", color: "#383858", marginTop: "3px" }}>
-                    RRF match
-                  </div>
+                  <div style={{ fontSize: "9px", color: "#475569", marginTop: "3px" }}>RRF match</div>
                 </div>
 
                 {/* Expand icon */}
-                <motion.div
-                  animate={{ rotate: isSelected ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ChevronDown size={13} color="#383858" />
+                <motion.div animate={{ rotate: isSelected ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                  <ChevronDown size={13} color="#475569" />
                 </motion.div>
               </div>
 
               {/* Match bar */}
-              <div
-                className="confidence-bar-track"
-                style={{ marginTop: "9px" }}
-              >
+              <div className="confidence-bar-track" style={{ marginTop: "9px" }}>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${matchPct}%` }}
                   transition={{ delay: i * 0.04 + 0.2, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
                   className="confidence-bar-fill"
-                  style={{
-                    background: "linear-gradient(90deg, #0284c7, #0ea5e9)",
-                  }}
+                  style={{ background: "linear-gradient(90deg, #0284c7, #0ea5e9)" }}
                 />
               </div>
             </motion.div>
@@ -216,19 +180,24 @@ const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandF
                     }}
                   >
                     {loading ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#475569" }}>
+                        <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} />
+                        Loading full note...
+                      </div>
+                    ) : fetchError ? (
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           gap: "8px",
-                          color: "#475569",
+                          color: "#64748b",
+                          fontSize: "11px",
                         }}
                       >
-                        <Loader2
-                          size={13}
-                          style={{ animation: "spin 1s linear infinite" }}
-                        />
-                        Loading full note...
+                        <AlertCircle size={13} color="#475569" />
+                        <span>
+                          Full note unavailable — showing snippet
+                        </span>
                       </div>
                     ) : fullRecord?.full_note ? (
                       fullRecord.full_note
@@ -242,8 +211,6 @@ const SimilarPatients: React.FC<SimilarPatientsProps> = ({ patients, demoExpandF
           </motion.div>
         );
       })}
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };

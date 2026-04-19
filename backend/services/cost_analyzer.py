@@ -106,14 +106,15 @@ def _compute_cost_index(
             base_score = _TIER_SCORES[tier]
         scores.append(base_score * m.confidence)
 
-    # Medication contribution
+    # Medication contribution — accumulate all high-cost drugs, capped at 40
     med_score = 0.0
     for med in meds:
         name_lower = med.drug_name.lower()
         for drug, s in _HIGH_COST_MEDS.items():
             if drug in name_lower:
-                med_score = max(med_score, s * 0.4)
+                med_score += s * 0.25
                 break
+    med_score = min(med_score, 40.0)
     if len(meds) >= 5:
         med_score += min(15, (len(meds) - 4) * 3)
 

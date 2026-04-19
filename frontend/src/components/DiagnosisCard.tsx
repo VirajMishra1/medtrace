@@ -27,6 +27,7 @@ const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ diagnosis, rank, forceExp
       transition={{ delay: rank * 0.07, duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       style={{
         marginBottom: "8px",
+        position: "relative",
         background: "var(--bg-card)",
         border: `1px solid ${expanded ? "rgba(14,165,233,0.2)" : "rgba(255,255,255,0.045)"}`,
         borderRadius: "12px",
@@ -109,7 +110,7 @@ const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ diagnosis, rank, forceExp
                 marginTop: "3px",
                 fontSize: "10px",
                 color: "#22d3ee",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                fontFamily: "var(--font-mono)",
                 background: "rgba(139,92,246,0.1)",
                 border: "1px solid rgba(139,92,246,0.2)",
                 padding: "1px 6px",
@@ -296,7 +297,7 @@ const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ diagnosis, rank, forceExp
                       <div
                         style={{
                           fontSize: "10px",
-                          color: "#383858",
+                          color: "#475569",
                           marginBottom: "6px",
                           textTransform: "uppercase",
                           letterSpacing: "0.08em",
@@ -330,7 +331,7 @@ const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ diagnosis, rank, forceExp
                       <div
                         style={{
                           fontSize: "10px",
-                          color: "#383858",
+                          color: "#475569",
                           marginBottom: "6px",
                           textTransform: "uppercase",
                           letterSpacing: "0.08em",

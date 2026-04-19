@@ -1,5 +1,6 @@
 import React from "react";
 import { ICD10Match } from "../types";
+import { Tag } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ICD10MatchesProps {
@@ -7,10 +8,66 @@ interface ICD10MatchesProps {
 }
 
 const ICD10Matches: React.FC<ICD10MatchesProps> = ({ matches }) => {
-  const maxConf = matches.length > 0 ? Math.max(...matches.map((m) => m.confidence)) : 1;
+  if (matches.length === 0) {
+    return (
+      <div
+        style={{
+          padding: "20px 16px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "10px",
+          background: "rgba(5,5,12,0.5)",
+          border: "1px solid rgba(255,255,255,0.05)",
+          borderRadius: "9px",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "9px",
+            background: "rgba(6,182,212,0.08)",
+            border: "1px solid rgba(6,182,212,0.15)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Tag size={16} color="#22d3ee" strokeOpacity={0.5} />
+        </div>
+        <div>
+          <div
+            style={{
+              fontSize: "12px",
+              fontWeight: 600,
+              color: "#475569",
+              marginBottom: "4px",
+            }}
+          >
+            No ICD-10 codes matched
+          </div>
+          <div
+            style={{
+              fontSize: "11px",
+              color: "var(--text-muted)",
+              fontFamily: "var(--font-mono)",
+              letterSpacing: "0.04em",
+            }}
+          >
+            Note may be too short or use non-standard terminology
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const confColor = (conf: number, max: number) => {
-    const pct = conf / max;
+  const maxConf = Math.max(...matches.map((m) => m.confidence));
+
+  const confColor = (conf: number) => {
+    const pct = conf / maxConf;
     if (pct > 0.8) return "#10b981";
     if (pct > 0.5) return "#f59e0b";
     return "#64748b";
@@ -19,7 +76,7 @@ const ICD10Matches: React.FC<ICD10MatchesProps> = ({ matches }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
       {matches.map((m, i) => {
-        const color = confColor(m.confidence, maxConf);
+        const color = confColor(m.confidence);
         return (
           <motion.div
             key={`${m.code}-${i}`}

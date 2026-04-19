@@ -18,8 +18,7 @@ import { analyzePatient, getHealth, getSamplePatients } from "./api";
 import { AnalysisResponse, HealthStatus, PatientRecord } from "./types";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Stethoscope, Pill, Zap, Users, Tag,
-  TrendingUp, BarChart3, GitBranch, AlertTriangle,
+  Tag, AlertTriangle,
   Activity, Database, Shield, Play,
 } from "lucide-react";
 
@@ -110,361 +109,169 @@ const DEMO_SEQUENCE: RawStep[] = [
 ];
 
 /* ── Section header ─────────────────────────────────────────────────────────── */
-const ICON_MAP: Record<string, React.ReactNode> = {
-  "Differential Diagnoses":      <Stethoscope size={12} />,
-  "Extracted Medications":       <Pill size={12} />,
-  "Interaction Alerts":          <Zap size={12} />,
-  "Similar Patients":            <Users size={12} />,
-  "ICD-10 Matches":              <Tag size={12} />,
-  "Admission Risk Simulation":   <TrendingUp size={12} />,
-  "Cost & Utilization Analysis": <BarChart3 size={12} />,
-  "Evidence Chain":              <GitBranch size={12} />,
+type Tone = "neutral" | "danger" | "warning" | "success";
+const TONE_COLORS: Record<Tone, string> = {
+  neutral: "var(--text-secondary)",
+  danger:  "#ef4444",
+  warning: "#f59e0b",
+  success: "#10b981",
 };
 
-const SectionHeader: React.FC<{ title: string; count?: number; accentColor?: string }> = ({
-  title, count, accentColor = "#0ea5e9",
+const SectionHeader: React.FC<{ title: string; count?: number; tone?: Tone }> = ({
+  title, count, tone = "neutral",
 }) => (
   <div
     style={{
       display: "flex",
-      alignItems: "center",
+      alignItems: "baseline",
       justifyContent: "space-between",
-      marginBottom: "16px",
-      paddingBottom: "11px",
-      borderBottom: "1px solid rgba(255,255,255,0.04)",
+      marginBottom: "20px",
+      paddingBottom: "12px",
+      borderBottom: "1px solid var(--border-subtle)",
     }}
   >
-    <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>
-      <div
-        style={{
-          width: "26px",
-          height: "26px",
-          background: `${accentColor}12`,
-          border: `1px solid ${accentColor}22`,
-          borderRadius: "6px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: accentColor,
-          flexShrink: 0,
-        }}
-      >
-        {ICON_MAP[title] ?? <div style={{ width: "6px", height: "6px", borderRadius: "2px", background: accentColor }} />}
-      </div>
-      <span
-        style={{
-          fontSize: "12px",
-          fontWeight: 700,
-          color: "#c8d4e0",
-          letterSpacing: "0.02em",
-          textTransform: "uppercase",
-          fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-        }}
-      >
-        {title}
-      </span>
-    </div>
+    <span
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: "10px",
+        fontWeight: 600,
+        color: TONE_COLORS[tone],
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+      }}
+    >
+      {title}
+    </span>
     {count !== undefined && (
       <span
         style={{
+          fontFamily: "var(--font-mono)",
           fontSize: "10px",
-          color: accentColor,
-          background: `${accentColor}0e`,
-          padding: "2px 9px",
-          borderRadius: "4px",
-          border: `1px solid ${accentColor}18`,
-          fontWeight: 700,
-          fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-          letterSpacing: "0.05em",
+          fontWeight: 500,
+          color: "var(--text-muted)",
+          letterSpacing: "0.06em",
         }}
       >
-        {count}
+        {String(count).padStart(2, "0")}
       </span>
     )}
-  </div>
-);
-
-/* ── Phase divider ───────────────────────────────────────────────────────────── */
-const PhaseLabel: React.FC<{ phase: string; label: string; color?: string }> = ({
-  phase, label, color = "#0ea5e9",
-}) => (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      gap: "12px",
-      marginBottom: "14px",
-      marginTop: "8px",
-    }}
-  >
-    <span
-      style={{
-        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-        fontSize: "9px",
-        fontWeight: 700,
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        color,
-        whiteSpace: "nowrap",
-      }}
-    >
-      {phase} ——
-    </span>
-    <span
-      style={{
-        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-        fontSize: "9px",
-        fontWeight: 600,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        color: "rgba(255,255,255,0.22)",
-        whiteSpace: "nowrap",
-      }}
-    >
-      {label}
-    </span>
-    <div
-      style={{
-        flex: 1,
-        height: "1px",
-        background: `linear-gradient(90deg, ${color}25, transparent)`,
-      }}
-    />
   </div>
 );
 
 /* ── Hero section ───────────────────────────────────────────────────────────── */
 const HeroSection: React.FC<{ health: HealthStatus | null }> = ({ health }) => (
   <motion.div
-    initial={{ opacity: 0, y: 16 }}
+    initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-    style={{
-      padding: "52px 0 44px",
-      textAlign: "center",
-      position: "relative",
-    }}
+    transition={{ duration: 0.7, ease: [0.25, 0, 0, 1] }}
+    style={{ padding: "72px 0 56px", textAlign: "center", position: "relative" }}
   >
-    {/* Top annotation */}
+    {/* Kicker */}
     <div
       style={{
         display: "inline-flex",
         alignItems: "center",
         gap: "8px",
-        marginBottom: "20px",
-        padding: "5px 14px",
-        background: "rgba(14,165,233,0.06)",
-        border: "1px solid rgba(14,165,233,0.15)",
-        borderRadius: "4px",
-        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-        fontSize: "9px",
-        fontWeight: 600,
-        letterSpacing: "0.2em",
+        marginBottom: "28px",
+        fontFamily: "var(--font-mono)",
+        fontSize: "10px",
+        fontWeight: 500,
+        letterSpacing: "0.16em",
         textTransform: "uppercase",
-        color: "#38bdf8",
+        color: "var(--text-muted)",
       }}
     >
       <div
         className="pulse-dot"
-        style={{
-          width: "5px",
-          height: "5px",
-          borderRadius: "50%",
-          background: "#0ea5e9",
-          color: "#0ea5e9",
-        }}
+        style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--accent)", color: "var(--accent)" }}
       />
-      Palantir Build Challenge — Healthcare AI
+      Palantir Build Challenge · Healthcare AI
     </div>
 
-    {/* Main headline */}
-    <h1
-      style={{
-        fontSize: "clamp(32px, 5vw, 52px)",
-        fontWeight: 800,
-        letterSpacing: "-0.03em",
-        lineHeight: 1.1,
-        color: "#e8eef7",
-        marginBottom: "8px",
-      }}
-    >
-      Clinical Intelligence
-      <br />
+    {/* Display headline — Instrument Serif */}
+    <h1 style={{ marginBottom: "0" }}>
       <span
         style={{
-          background: "linear-gradient(90deg, #0ea5e9 0%, #06b6d4 50%, #38bdf8 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
+          display: "block",
+          fontFamily: "var(--font-serif)",
+          fontSize: "clamp(42px, 6.5vw, 68px)",
+          fontWeight: 400,
+          letterSpacing: "-0.025em",
+          lineHeight: 1.08,
+          color: "var(--text-primary)",
         }}
       >
-        at the Point of Care
+        Clinical Intelligence
+      </span>
+      <span
+        style={{
+          display: "block",
+          fontFamily: "var(--font-serif)",
+          fontSize: "clamp(42px, 6.5vw, 68px)",
+          fontWeight: 400,
+          fontStyle: "italic",
+          letterSpacing: "-0.025em",
+          lineHeight: 1.12,
+          color: "var(--text-secondary)",
+        }}
+      >
+        at the Point of Care.
       </span>
     </h1>
 
-    {/* Subtitle */}
+    {/* Lede */}
     <p
       style={{
-        fontSize: "14px",
-        color: "#556070",
-        maxWidth: "560px",
-        margin: "16px auto 32px",
-        lineHeight: 1.7,
-        letterSpacing: "0.01em",
+        fontSize: "15px",
+        color: "var(--text-secondary)",
+        maxWidth: "500px",
+        margin: "24px auto 40px",
+        lineHeight: 1.65,
       }}
     >
-      MedTrace turns unstructured clinical notes into structured intelligence —
-      differential diagnoses, drug interaction detection, admission risk simulation,
-      and cost modelling. All running locally, all in seconds.
+      Differential diagnoses, drug interaction detection, admission risk simulation,
+      and cost modelling — from a clinical note, in seconds, entirely local.
     </p>
 
-    {/* Stats row */}
+    {/* Stats bar — unified card */}
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "6px",
-        flexWrap: "wrap",
+        display: "inline-flex",
+        alignItems: "stretch",
+        background: "var(--bg-card)",
+        border: "1px solid var(--border-default)",
+        borderRadius: "var(--r-sm)",
+        overflow: "hidden",
       }}
     >
       {[
-        { icon: <Database size={11} />, value: (health?.patient_count ?? 167442).toLocaleString(), label: "Patient Records", color: "#0ea5e9" },
-        { icon: <Tag size={11} />,      value: (health?.icd10_count  ?? 96000).toLocaleString() + "+", label: "ICD-10 Codes",    color: "#06b6d4" },
-        { icon: <Activity size={11} />, value: "4",                                                   label: "AI Modules",      color: "#38bdf8" },
-        { icon: <Shield size={11} />,   value: "100%",                                                label: "Local Inference", color: "#0ea5e9" },
+        { icon: <Database size={11} />, value: (health?.patient_count ?? 167442).toLocaleString(), label: "patients" },
+        { icon: <Tag size={11} />,      value: (health?.icd10_count  ?? 96000).toLocaleString() + "+", label: "ICD-10 codes" },
+        { icon: <Activity size={11} />, value: "4",     label: "AI modules" },
+        { icon: <Shield size={11} />,   value: "100%",  label: "local" },
       ].map((s, i) => (
-        <React.Fragment key={i}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "7px",
-              padding: "7px 14px",
-              background: `${s.color}08`,
-              border: `1px solid ${s.color}18`,
-              borderRadius: "6px",
-            }}
-          >
-            <span style={{ color: s.color }}>{s.icon}</span>
-            <span
-              style={{
-                fontSize: "13px",
-                fontWeight: 700,
-                color: "#e8eef7",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-              }}
-            >
-              {s.value}
-            </span>
-            <span
-              style={{
-                fontSize: "10px",
-                color: "#556070",
-                letterSpacing: "0.05em",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-                textTransform: "uppercase",
-              }}
-            >
-              {s.label}
-            </span>
-          </div>
-          {i < 3 && (
-            <span
-              style={{
-                color: "rgba(255,255,255,0.08)",
-                fontSize: "16px",
-                fontWeight: 300,
-              }}
-            >
-              /
-            </span>
-          )}
-        </React.Fragment>
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "11px 20px",
+            borderRight: i < 3 ? "1px solid var(--border-subtle)" : "none",
+          }}
+        >
+          <span style={{ color: "var(--accent)", opacity: 0.65 }}>{s.icon}</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
+            {s.value}
+          </span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--text-muted)", letterSpacing: "0.04em" }}>
+            {s.label}
+          </span>
+        </div>
       ))}
     </div>
 
-    {/* Module pipeline illustration */}
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0",
-        marginTop: "28px",
-        flexWrap: "wrap",
-      }}
-    >
-      {[
-        { label: "Hybrid Retrieval", sub: "BM25 + FAISS", color: "#0ea5e9" },
-        { label: "ICD-10 Mapping", sub: "Semantic + nomic", color: "#06b6d4" },
-        { label: "Drug Interactions", sub: "Pharmacovigilance", color: "#f59e0b" },
-        { label: "Risk + Cost", sub: "Simulation engine", color: "#10b981" },
-      ].map((m, i) => (
-        <React.Fragment key={i}>
-          <div
-            style={{
-              padding: "8px 16px",
-              background: "rgba(255,255,255,0.02)",
-              border: `1px solid ${m.color}15`,
-              borderRadius: "6px",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "11px",
-                fontWeight: 600,
-                color: m.color,
-                letterSpacing: "0.04em",
-                marginBottom: "2px",
-              }}
-            >
-              {m.label}
-            </div>
-            <div
-              style={{
-                fontSize: "9px",
-                color: "#2a3040",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-              }}
-            >
-              {m.sub}
-            </div>
-          </div>
-          {i < 3 && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0 4px",
-              }}
-            >
-              <div
-                style={{
-                  width: "20px",
-                  height: "1px",
-                  background: "rgba(255,255,255,0.06)",
-                }}
-              />
-              <div
-                style={{
-                  width: "0",
-                  height: "0",
-                  borderTop: "3px solid transparent",
-                  borderBottom: "3px solid transparent",
-                  borderLeft: "5px solid rgba(255,255,255,0.06)",
-                }}
-              />
-            </div>
-          )}
-        </React.Fragment>
-      ))}
-    </div>
-
-    {/* Divider */}
-    <div className="intel-sep" style={{ marginTop: "40px", marginBottom: "0" }} />
+    <div className="intel-sep" style={{ marginTop: "52px", marginBottom: "0" }} />
   </motion.div>
 );
 
@@ -518,7 +325,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getSamplePatients(12).then(setSamplePatients).catch(() => setSamplePatients([]));
+    getSamplePatients(12)
+      .then(setSamplePatients)
+      .catch(() => {
+        setSamplePatients([]);
+        console.warn("[MedTrace] Failed to load sample patients — backend may be offline");
+      });
   }, []);
 
   const handleAnalyze = useCallback(async (note: string) => {
@@ -529,7 +341,7 @@ function App() {
     setCurrentStep("Embedding patient note");
     setAnalysisTimestamp(new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC");
 
-    const steps = [
+    const PIPELINE_LABELS = [
       "Embedding patient note",
       "Retrieving similar patients",
       "Mapping ICD-10 codes",
@@ -538,13 +350,14 @@ function App() {
       "Generating diagnoses",
     ];
     let stepIdx = 0;
+    // Stagger steps across the expected ~30s analysis window (5s each)
     const stepInterval = setInterval(() => {
-      if (stepIdx < steps.length) {
-        setCurrentStep(steps[stepIdx]);
-        setLiveSteps((prev) => [...prev, steps[stepIdx]]);
+      if (stepIdx < PIPELINE_LABELS.length) {
+        setCurrentStep(PIPELINE_LABELS[stepIdx]);
+        setLiveSteps((prev) => [...prev, PIPELINE_LABELS[stepIdx]]);
         stepIdx++;
       }
-    }, 4000);
+    }, 5000);
 
     try {
       const data = await analyzePatient(note);
@@ -552,9 +365,14 @@ function App() {
       setLiveSteps(data.processing_steps);
       setCurrentStep("Analysis complete");
       setResult(data);
-    } catch (e: any) {
+    } catch (e: unknown) {
       clearInterval(stepInterval);
-      setError(e?.response?.data?.detail || e?.message || "Analysis failed. Check that the backend is running.");
+      const axiosErr = e as { response?: { data?: { detail?: string } }; message?: string };
+      setError(
+        axiosErr?.response?.data?.detail ||
+        axiosErr?.message ||
+        "Analysis failed. Check that the backend is running."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -731,7 +549,7 @@ function App() {
             >
               <AlertTriangle size={14} color="#ef4444" />
               <span style={{ fontSize: "12px", color: "#ef4444", fontWeight: 600,
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace", letterSpacing: "0.02em" }}>
+                fontFamily: "var(--font-mono)", letterSpacing: "0.02em" }}>
                 {error}
               </span>
             </motion.div>
@@ -753,153 +571,98 @@ function App() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Intelligence Report header */}
+              {/* Thin status line — replaces loud Intelligence Report banner */}
               <motion.div
                 id="demo-report"
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 style={{
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "baseline",
                   justifyContent: "space-between",
-                  padding: "14px 20px",
-                  background: "rgba(14,165,233,0.04)",
-                  border: "1px solid rgba(14,165,233,0.12)",
-                  borderRadius: "8px",
-                  marginBottom: "24px",
+                  gap: "16px",
+                  padding: "4px 2px 24px",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  flexWrap: "wrap",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                  <div
-                    style={{
-                      width: "28px",
-                      height: "28px",
-                      background: "linear-gradient(135deg, #0284c7, #0ea5e9)",
-                      borderRadius: "6px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 0 12px rgba(14,165,233,0.3)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Activity size={13} color="white" />
-                  </div>
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        letterSpacing: "0.18em",
-                        textTransform: "uppercase",
-                        color: "#38bdf8",
-                        marginBottom: "2px",
-                      }}
-                    >
-                      Intelligence Report — Active
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-                        fontSize: "9px",
-                        color: "#2a3040",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {analysisTimestamp} · {result.processing_steps.length} pipeline stages completed
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  {/* Module summary chips */}
-                  {[
-                    { v: result.diagnoses.length,       label: "Dx",   c: "#10b981" },
-                    { v: result.medications.length,     label: "Meds", c: "#0ea5e9" },
-                    { v: result.interactions.length,    label: "IA",   c: criticalAlerts > 0 ? "#ef4444" : "#f59e0b" },
-                    { v: result.similar_patients.length,label: "Pts",  c: "#38bdf8" },
-                  ].map((chip) => (
-                    <div
-                      key={chip.label}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        padding: "3px 8px",
-                        background: `${chip.c}0a`,
-                        border: `1px solid ${chip.c}18`,
-                        borderRadius: "4px",
-                        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        color: chip.c,
-                      }}
-                    >
-                      {chip.v} <span style={{ color: "rgba(255,255,255,0.2)", fontWeight: 400 }}>{chip.label}</span>
-                    </div>
-                  ))}
-                </div>
+                <span style={{ color: "var(--text-secondary)", display: "inline-flex", alignItems: "center", gap: "10px" }}>
+                  <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--green)" }} />
+                  Analysis complete
+                  <span style={{ color: "var(--text-ghost)" }}>·</span>
+                  <span style={{ color: "var(--text-muted)" }}>{analysisTimestamp}</span>
+                </span>
+                <span style={{ color: "var(--text-muted)", display: "inline-flex", alignItems: "center", gap: "14px" }}>
+                  <span><span style={{ color: "var(--text-secondary)" }}>{result.diagnoses.length}</span> Dx</span>
+                  <span><span style={{ color: "var(--text-secondary)" }}>{result.medications.length}</span> Meds</span>
+                  <span>
+                    <span style={{ color: criticalAlerts > 0 ? "#ef4444" : "var(--text-secondary)" }}>
+                      {result.interactions.length}
+                    </span> Interactions
+                  </span>
+                  <span><span style={{ color: "var(--text-secondary)" }}>{result.similar_patients.length}</span> Patients</span>
+                </span>
               </motion.div>
 
-              {/* Critical alert banner */}
+              {/* Critical alert — editorial, no emoji */}
               {criticalAlerts > 0 && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
                   style={{
-                    padding: "12px 18px",
-                    marginBottom: "24px",
-                    background: "rgba(239,68,68,0.05)",
-                    border: "1px solid rgba(239,68,68,0.22)",
-                    borderLeft: "3px solid #ef4444",
-                    borderRadius: "8px",
+                    padding: "14px 18px",
+                    marginBottom: "28px",
+                    background: "rgba(239,68,68,0.04)",
+                    border: "1px solid rgba(239,68,68,0.18)",
+                    borderLeft: "2px solid #ef4444",
+                    borderRadius: "var(--r-sm)",
                     display: "flex",
                     alignItems: "center",
                     gap: "14px",
                   }}
                 >
-                  <AlertTriangle size={16} color="#ef4444" />
+                  <AlertTriangle size={16} color="#ef4444" strokeWidth={1.8} />
                   <div style={{ flex: 1 }}>
                     <div
                       style={{
-                        fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                        fontFamily: "var(--font-mono)",
                         fontSize: "10px",
-                        fontWeight: 700,
-                        letterSpacing: "0.14em",
+                        fontWeight: 600,
+                        letterSpacing: "0.12em",
                         textTransform: "uppercase",
                         color: "#ef4444",
-                        marginBottom: "2px",
+                        marginBottom: "3px",
                       }}
                     >
-                      ⚠ {criticalAlerts} Critical Drug Interaction{criticalAlerts > 1 ? "s" : ""} Detected
+                      {criticalAlerts} Critical Drug Interaction{criticalAlerts > 1 ? "s" : ""} Detected
                     </div>
-                    <div style={{ fontSize: "11px", color: "#94a3b8" }}>
-                      Immediate clinical review recommended — see Interaction Alerts below for full details
+                    <div style={{ fontSize: "12px", color: "var(--text-secondary)", lineHeight: 1.55 }}>
+                      Immediate clinical review recommended — see Interaction Alerts below for full details.
                     </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* PHASE I — Clinical Assessment */}
-              <PhaseLabel phase="Phase I" label="Clinical Assessment" color="#10b981" />
+              {/* Clinical Assessment — Diagnoses + Meds + Interactions */}
               <div
                 id="demo-diagnoses"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "3fr 2fr",
-                  gap: "14px",
-                  marginBottom: "14px",
+                  gap: "16px",
+                  marginBottom: "32px",
                 }}
               >
-                <div className="card" style={{ padding: "20px" }}>
-                  <SectionHeader title="Differential Diagnoses" count={result.diagnoses.length} accentColor="#10b981" />
+                <div className="card" style={{ padding: "22px" }}>
+                  <SectionHeader title="Differential Diagnoses" count={result.diagnoses.length} />
                   {result.diagnoses.length === 0 ? (
-                    <div style={{ fontSize: "11px", color: "#2a3040", textAlign: "center", padding: "20px",
-                      fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace", letterSpacing: "0.08em" }}>
+                    <div style={{ fontSize: "11px", color: "var(--text-muted)", textAlign: "center", padding: "20px",
+                      fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>
                       NO DIAGNOSES GENERATED
                     </div>
                   ) : (
@@ -909,92 +672,88 @@ function App() {
                   )}
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                  <div id="demo-medications" className="card" style={{ padding: "20px" }}>
-                    <SectionHeader title="Extracted Medications" count={result.medications.length} accentColor="#0ea5e9" />
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <div id="demo-medications" className="card" style={{ padding: "22px" }}>
+                    <SectionHeader title="Extracted Medications" count={result.medications.length} />
                     <MedicationTable medications={result.medications} />
                   </div>
-                  <div id="demo-interactions" className="card" style={{ padding: "20px" }}>
+                  <div id="demo-interactions" className="card" style={{ padding: "22px" }}>
                     <SectionHeader
                       title="Interaction Alerts"
                       count={result.interactions.length}
-                      accentColor={criticalAlerts > 0 ? "#ef4444" : "#f59e0b"}
+                      tone={criticalAlerts > 0 ? "danger" : result.interactions.length > 0 ? "warning" : "neutral"}
                     />
                     <InteractionAlerts interactions={result.interactions} demoExpandIdx={demoExpandInteract} />
                   </div>
                 </div>
               </div>
 
-              {/* PHASE II — Patient Intelligence */}
-              <div className="intel-sep" />
-              <PhaseLabel phase="Phase II" label="Patient Intelligence" color="#0ea5e9" />
+              {/* Patient Intelligence — Similar Patients + ICD-10 */}
               <div
                 id="demo-patients"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
-                  gap: "14px",
-                  marginBottom: "14px",
+                  gap: "16px",
+                  marginBottom: "32px",
                 }}
               >
-                <div className="card" style={{ padding: "20px" }}>
-                  <SectionHeader title="Similar Patients" count={result.similar_patients.length} accentColor="#38bdf8" />
+                <div className="card" style={{ padding: "22px" }}>
+                  <SectionHeader title="Similar Patients" count={result.similar_patients.length} />
                   <SimilarPatients patients={result.similar_patients} demoExpandFirst={demoExpandPatient} />
                 </div>
-                <div id="demo-icd10" className="card" style={{ padding: "20px" }}>
-                  <SectionHeader title="ICD-10 Matches" count={result.icd10_matches.length} accentColor="#06b6d4" />
+                <div id="demo-icd10" className="card" style={{ padding: "22px" }}>
+                  <SectionHeader title="ICD-10 Matches" count={result.icd10_matches.length} />
                   <ICD10Matches matches={result.icd10_matches} />
                 </div>
               </div>
 
-              {/* PHASE III — Risk & Cost Forecast */}
+              {/* Operational Forecast — Admission Risk + Cost */}
               {(result.admission_risk || result.cost_analysis) && (
-                <>
-                  <div className="intel-sep" />
-                  <PhaseLabel phase="Phase III" label="Operational Forecast" color="#f59e0b" />
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "14px",
-                      marginBottom: "14px",
-                    }}
-                  >
-                    {result.admission_risk && (
-                      <div id="demo-risk" className="card" style={{ padding: "20px" }}>
-                        <SectionHeader
-                          title="Admission Risk Simulation"
-                          accentColor={
-                            result.admission_risk.risk_level === "critical" ? "#ef4444" :
-                            result.admission_risk.risk_level === "high"     ? "#f97316" :
-                            result.admission_risk.risk_level === "medium"   ? "#f59e0b" : "#10b981"
-                          }
-                        />
-                        <AdmissionRisk data={result.admission_risk} />
-                      </div>
-                    )}
-                    {result.cost_analysis && (
-                      <div id="demo-cost" className="card" style={{ padding: "20px" }}>
-                        <SectionHeader
-                          title="Cost & Utilization Analysis"
-                          accentColor={
-                            result.cost_analysis.cost_tier === "critical" ? "#ef4444" :
-                            result.cost_analysis.cost_tier === "high"     ? "#f97316" :
-                            result.cost_analysis.cost_tier === "medium"   ? "#f59e0b" : "#10b981"
-                          }
-                        />
-                        <CostAnalysis data={result.cost_analysis} />
-                      </div>
-                    )}
-                  </div>
-                </>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px",
+                    marginBottom: "32px",
+                  }}
+                >
+                  {result.admission_risk && (
+                    <div id="demo-risk" className="card" style={{ padding: "22px" }}>
+                      <SectionHeader
+                        title="Admission Risk Simulation"
+                        tone={
+                          result.admission_risk.risk_level === "critical" || result.admission_risk.risk_level === "high"
+                            ? "danger"
+                            : result.admission_risk.risk_level === "medium"
+                              ? "warning"
+                              : "neutral"
+                        }
+                      />
+                      <AdmissionRisk data={result.admission_risk} />
+                    </div>
+                  )}
+                  {result.cost_analysis && (
+                    <div id="demo-cost" className="card" style={{ padding: "22px" }}>
+                      <SectionHeader
+                        title="Cost & Utilization Analysis"
+                        tone={
+                          result.cost_analysis.cost_tier === "critical" || result.cost_analysis.cost_tier === "high"
+                            ? "danger"
+                            : result.cost_analysis.cost_tier === "medium"
+                              ? "warning"
+                              : "neutral"
+                        }
+                      />
+                      <CostAnalysis data={result.cost_analysis} />
+                    </div>
+                  )}
+                </div>
               )}
 
-              {/* PHASE IV — Evidence */}
-              <div className="intel-sep" />
-              <PhaseLabel phase="Phase IV" label="Evidence Chain" color="#818cf8" />
-              <div id="demo-evidence" className="card" style={{ padding: "20px", marginBottom: "14px" }}>
-                <SectionHeader title="Evidence Chain" accentColor="#818cf8" />
+              {/* Evidence Chain */}
+              <div id="demo-evidence" className="card" style={{ padding: "22px", marginBottom: "24px" }}>
+                <SectionHeader title="Evidence Chain" />
                 <EvidenceChain result={result} />
               </div>
 
@@ -1004,11 +763,13 @@ function App() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "16px 0 4px",
-                  borderTop: "1px solid rgba(14,165,233,0.06)",
+                  padding: "20px 2px 4px",
+                  borderTop: "1px solid var(--border-subtle)",
+                  flexWrap: "wrap",
+                  gap: "12px",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
                   <span className="data-tag">PMC-Patients 167K</span>
                   <span className="data-tag">nomic-embed-text-v1.5</span>
                   <span className="data-tag">qwen2.5-3b-instruct</span>
@@ -1017,29 +778,29 @@ function App() {
                 <button
                   onClick={() => setShowMethodology(true)}
                   style={{
-                    background: "rgba(14,165,233,0.04)",
-                    border: "1px solid rgba(14,165,233,0.1)",
-                    color: "#556070",
+                    background: "transparent",
+                    border: "1px solid var(--border-default)",
+                    color: "var(--text-secondary)",
                     cursor: "pointer",
-                    borderRadius: "5px",
-                    padding: "5px 14px",
+                    borderRadius: "var(--r-sm)",
+                    padding: "7px 14px",
                     fontSize: "10px",
-                    fontWeight: 600,
-                    transition: "all 0.15s ease",
-                    letterSpacing: "0.1em",
+                    fontWeight: 500,
+                    letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                    fontFamily: "var(--font-mono)",
+                    transition: "color 0.15s ease, border-color 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
-                    (e.target as HTMLButtonElement).style.borderColor = "rgba(14,165,233,0.3)";
-                    (e.target as HTMLButtonElement).style.color = "#38bdf8";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-strong)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "var(--text-primary)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.target as HTMLButtonElement).style.borderColor = "rgba(14,165,233,0.1)";
-                    (e.target as HTMLButtonElement).style.color = "#556070";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-default)";
+                    (e.currentTarget as HTMLButtonElement).style.color = "var(--text-secondary)";
                   }}
                 >
-                  Methodology
+                  Methodology ↗
                 </button>
               </div>
             </motion.div>
@@ -1056,11 +817,11 @@ function App() {
           >
             <div
               style={{
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "10px",
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "#2a3040",
+                color: "var(--text-muted)",
                 marginBottom: "8px",
               }}
             >
@@ -1069,8 +830,8 @@ function App() {
             <div
               style={{
                 fontSize: "11px",
-                color: "#1a2030",
-                fontFamily: "'SF Mono', 'Fira Code', ui-monospace, monospace",
+                color: "var(--text-ghost)",
+                fontFamily: "var(--font-mono)",
                 letterSpacing: "0.08em",
               }}
             >
